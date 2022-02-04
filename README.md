@@ -1,4 +1,5 @@
-# Grafana (ubuntu) Dockerfile with preinstalled plugins
+# Grafana (ubuntu) Dockerfile with preinstalled plugins (beta)
+
 
 ## How to build the image
 
@@ -15,12 +16,18 @@ docker build \
 -t grafana-weai -f Dockerfile .
 ```
 
+
 ## Create a persistent volume for data in /var/lib/grafana (database and plugins)
 
 ```bash
 docker volume create grafana-storage
 ```
+
+
 ## Start the container 
 ```
 docker run -d -v grafana-storage:/var/lib/grafana -p 3000:3000 --name=grafana grafana-weai
 ```
+
+## (WIP) bash script for auto-deploy
+execute ```autoexec.sh``` to build and and launch the image in one click 
