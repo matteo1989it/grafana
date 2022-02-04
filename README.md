@@ -2,11 +2,9 @@
 
 ## How to build the image
 
-Once cloned the repository move inside it and execute the build command 
+Once cloned the repository move inside ```grafana\Docker``` and execute the build command 
 
 ```bash
-cd Docker
-
 docker build \
 
 --build-arg "GRAFANA_VERSION=latest" \
