@@ -37,5 +37,5 @@ docker exec -t grafana bash /etc/config/post.sh
 ## Navigate to the login page
 Open a web browser page at localhost:3000 and use the default ```user/password``` combination (admin\admin)
 
-## (WIP) bash script for auto-deploy
+## EXTRA: Bash script for auto-deploy
 execute ```autoexec.sh``` to build and launch the image in one click 
