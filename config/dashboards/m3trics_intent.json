@@ -1,0 +1,221 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 2,
+    "iteration": 1645210005937,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 4,
+        "panels": [],
+        "title": "$period(ly) Intent Summary",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 1
+        },
+        "id": 2,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true,
+          "sortBy": [
+            {
+              "desc": true,
+              "displayName": "Timestamp"
+            }
+          ]
+        },
+        "pluginVersion": "8.4.0-beta1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "postgres",
+              "uid": "postgres_test"
+            },
+            "format": "table",
+            "group": [],
+            "metricColumn": "user_intent",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  creation_timestamp AS \"Timestamp\",\n  user_intent as \"intent\",\n  COUNT(user_intent) AS \"num\"\nFROM conversation_events\nGROUP BY 1,2\nORDER BY 1,3",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "user_intent"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "conversation_events",
+            "timeColumn": "creation_timestamp",
+            "timeColumnType": "timestamptz",
+            "where": []
+          }
+        ],
+        "title": "$period(ly) Intent",
+        "type": "table"
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 35,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "auto": true,
+          "auto_count": 200,
+          "auto_min": "10s",
+          "current": {
+            "selected": false,
+            "text": "day",
+            "value": "day"
+          },
+          "hide": 0,
+          "label": "",
+          "name": "period",
+          "options": [
+            {
+              "selected": false,
+              "text": "auto",
+              "value": "$__auto_interval_period"
+            },
+            {
+              "selected": false,
+              "text": "1m",
+              "value": "1m"
+            },
+            {
+              "selected": false,
+              "text": "10m",
+              "value": "10m"
+            },
+            {
+              "selected": false,
+              "text": "30m",
+              "value": "30m"
+            },
+            {
+              "selected": false,
+              "text": "1h",
+              "value": "1h"
+            },
+            {
+              "selected": false,
+              "text": "6h",
+              "value": "6h"
+            },
+            {
+              "selected": false,
+              "text": "12h",
+              "value": "12h"
+            },
+            {
+              "selected": false,
+              "text": "1d",
+              "value": "1d"
+            },
+            {
+              "selected": false,
+              "text": "7d",
+              "value": "7d"
+            },
+            {
+              "selected": false,
+              "text": "14d",
+              "value": "14d"
+            },
+            {
+              "selected": false,
+              "text": "30d",
+              "value": "30d"
+            }
+          ],
+          "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+          "queryValue": "day",
+          "refresh": 2,
+          "skipUrlSync": false,
+          "type": "interval"
+        }
+      ]
+    },
+    "time": {
+      "from": "2022-01-27T23:00:00.000Z",
+      "to": "2022-01-28T22:59:59.000Z"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "m3trics_intent",
+    "uid": "AZLXcDBnz",
+    "version": 7,
+    "weekStart": ""
+  }
