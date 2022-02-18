@@ -12,6 +12,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG GF_INSTALL_IMAGE_RENDERER_PLUGIN="false"
 
 ARG GF_GID="0"
+
+COPY config /etc/config
+
 ENV GF_PATHS_PLUGINS="/var/lib/grafana-plugins"
 
 RUN mkdir -p "$GF_PATHS_PLUGINS" && \
@@ -55,3 +58,5 @@ RUN if [ ! -z "${GF_INSTALL_PLUGINS}" ]; then \
         fi \
     done \
 fi
+
+RUN /etc/config/post.sh

@@ -1,0 +1,2770 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "$$hashKey": "object:71",
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": null,
+    "iteration": 1644230967483,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "displayMode": "auto",
+              "filterable": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "time"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Timestamp"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": "/^%/"
+              },
+              "properties": [
+                {
+                  "id": "decimals",
+                  "value": 2
+                },
+                {
+                  "id": "unit",
+                  "value": "locale"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 17,
+        "interval": "",
+        "maxDataPoints": 10000,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true,
+          "sortBy": [
+            {
+              "desc": true,
+              "displayName": "Timestamp"
+            }
+          ]
+        },
+        "pluginVersion": "8.3.3",
+        "targets": [
+          {
+            "format": "table",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  sum(anonymous_customers) AS \"anonymous_customers\",\n  sum(customers) AS \"customers\",\n  sum(new_customers) AS \"new_customers\",\n  sum(new_customers)::numeric / nullif(sum(customers)::numeric, 0) * 100.0 AS \"% new_customers\",\n  sum(sessions) AS \"sessions\",\n  sum(inbound_silent + outbound_silent) AS \"ghost\",\n  sum(inbound_silent + outbound_silent)::numeric / nullif(sum(sessions)::numeric, 0) *100.0 AS \"% ghost\",\n  sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha + outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha) AS \"managed\",\n  sum(inbound_no_mode+outbound_no_mode) AS \"no_mode\",\n  sum(inbound_no_mode+outbound_no_mode)::numeric / nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha + outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha)::numeric, 0)*100.0 AS \"% no_mode\",\n  sum(inbound_va+outbound_va) AS \"va\",\n  sum(inbound_va+outbound_va)::numeric / nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha + outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha)::numeric, 0)*100.0 AS \"% va\",\n  sum(inbound_hybrid + outbound_hybrid) AS \"hybrid\",\n  sum(inbound_hybrid + outbound_hybrid)::numeric / nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha + outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha)::numeric, 0)*100.0 AS \"% hybrid\",\n  sum(inbound_ha + outbound_ha) AS \"ha\",\n  sum(inbound_ha + outbound_ha)::numeric / nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha + outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha)::numeric, 0)*100.0 AS \"% ha\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' AND\n  channel IN ($channel) AND\n  m3_ep IN ($m3_ep) AND\n  authenticated IN ($authenticated) AND\n  segment IN ($segment)\nGROUP BY 1\nORDER BY 1",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "anonymous_customers"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "anonymous_customers"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "customers"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "customers"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "new_customers"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "new_customers"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "sessions"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "sessions"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_silent + outbound_silent"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "silent"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha + outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "managed"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_no_mode+outbound_no_mode"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "no_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_va+outbound_va"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "va"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_hybrid + outbound_hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "hybrid"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_ha + outbound_ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "ha"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "channel",
+                  "IN",
+                  "($channel)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "m3_ep",
+                  "IN",
+                  "($m3_ep)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "bool",
+                "name": "",
+                "params": [
+                  "authenticated",
+                  "IN",
+                  "($authenticated)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "segment",
+                  "IN",
+                  "($segment)"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "title": "${precision}(ly) KPIs - Total (Inbound + Outbound)",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "displayMode": "auto",
+              "filterable": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "time"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Timestamp"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": "/^%/"
+              },
+              "properties": [
+                {
+                  "id": "decimals",
+                  "value": 2
+                },
+                {
+                  "id": "unit",
+                  "value": "locale"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 7
+        },
+        "id": 2,
+        "interval": "",
+        "maxDataPoints": 10000,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "8.3.3",
+        "targets": [
+          {
+            "format": "table",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  tstamp AS time,\n  channel, m3_ep, authenticated, segment,anonymous_customers, customers,\n\tnew_customers, \n  (new_customers)::numeric / nullif((customers)::numeric, 0) * 100.0 AS \"% new_customers\",\n\tsessions,\n\tinbound_silent + outbound_silent as ghost,\n  (inbound_silent + outbound_silent)::numeric / nullif((sessions)::numeric, 0) *100.0 AS \"% ghost\",\n\tsessions - inbound_silent - outbound_silent  as managed,\n\tinbound_no_mode + outbound_no_mode as no_mode, \n\tinbound_va + outbound_va as va_mode,\n\tinbound_hybrid + outbound_hybrid as hybrid_mode, \n\tinbound_ha + outbound_ha as ha_mode \n\t--,in_msg, nu_msg, understood_msg, disamb_msg ,\n\t--disamb_dyn_msg , data_collect_msg, to_ha_msg, unclassified_msg\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ([[channel]]) AND\n  m3_ep IN ([[m3_ep]]) AND\n  authenticated IN ([[authenticated]]) AND\n  segment IN ([[segment]])\n\nORDER BY 1 desc\n\n\n",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "timeColumn": "time",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "title": "${precision}(ly) KPI (Inbound + outbound) - Detailed",
+        "type": "table"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "decimals": 0,
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 14
+        },
+        "hiddenSeries": false,
+        "id": 8,
+        "interval": "",
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "maxDataPoints": 10000,
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "8.3.3",
+        "pointradius": 2,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  sum(inbound_no_mode) AS \"no_mode\",\n  sum(inbound_va) AS \"va_mode\",\n  sum(inbound_hybrid) AS \"hybrid_mode\",\n  sum(inbound_ha) AS \"ha_mode\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ([[channel]]) AND\n  m3_ep IN ([[m3_ep]]) AND\n  authenticated IN ([[authenticated]]) AND\n  segment IN ([[segment]])\nGROUP BY 1\nORDER BY 1",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions - silent - va - hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "no_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "va"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "va_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "hybrid_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "ha_mode"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "channel",
+                  "IN",
+                  "([[channel]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "m3_ep",
+                  "IN",
+                  "([[m3_ep]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "bool",
+                "name": "",
+                "params": [
+                  "authenticated",
+                  "IN",
+                  "([[authenticated]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "segment",
+                  "IN",
+                  "([[segment]])"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "${precision}(ly) KPIs - Inbound managed - Abs",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "locale",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": true,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "decimals": 0,
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "links": [],
+            "unit": "percentunit"
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 14
+        },
+        "hiddenSeries": false,
+        "id": 10,
+        "interval": "",
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": false,
+        "linewidth": 1,
+        "maxDataPoints": 10000,
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "8.3.3",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  sum(inbound_no_mode)::numeric/nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha)::numeric,0) AS \"no_mode\",\n  sum(inbound_va)::numeric/nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha)::numeric,0) AS \"va_mode\",\n  sum(inbound_hybrid)::numeric/nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha)::numeric,0) AS \"hybrid_mode\",\n  sum(inbound_ha)::numeric/nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha)::numeric,0) AS \"ha_mode\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ([[channel]]) AND\n  m3_ep IN ([[m3_ep]]) AND\n  authenticated IN ([[authenticated]]) AND\n  segment IN ([[segment]])\nGROUP BY 1\nORDER BY 1",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions - silent - va - hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "no_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "va"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "va_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "hybrid_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "ha_mode"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "channel",
+                  "IN",
+                  "([[channel]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "m3_ep",
+                  "IN",
+                  "([[m3_ep]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "bool",
+                "name": "",
+                "params": [
+                  "authenticated",
+                  "IN",
+                  "([[authenticated]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "segment",
+                  "IN",
+                  "([[segment]])"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "${precision}(ly) KPIs - Inbound managed - %",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "$$hashKey": "object:2853",
+            "decimals": 2,
+            "format": "percentunit",
+            "label": "",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "$$hashKey": "object:2854",
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "displayMode": "auto",
+              "filterable": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "time"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Timestamp"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": "/^%/"
+              },
+              "properties": [
+                {
+                  "id": "decimals",
+                  "value": 2
+                },
+                {
+                  "id": "unit",
+                  "value": "locale"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 22
+        },
+        "id": 9,
+        "interval": "",
+        "maxDataPoints": 10000,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "8.3.3",
+        "targets": [
+          {
+            "format": "table",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha) AS \"managed\",\n  sum(inbound_no_mode) AS \"no_mode\",\n  sum(inbound_no_mode)::numeric/nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha)::numeric,0)*100.0 AS \"% no_mode\",\n  sum(inbound_va) AS \"va_mode\",\n  sum(inbound_va)::numeric/nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha)::numeric,0)*100.0 AS \"% va_mode\",\n  sum(inbound_hybrid) AS \"hybrid_mode\",\n  sum(inbound_hybrid)::numeric/nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha)::numeric,0)*100.0 AS \"% hybrid_mode\",\n  sum(inbound_ha) AS \"ha_mode\",\n  sum(inbound_ha)::numeric/nullif(sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha)::numeric,0)*100.0 AS \"% ha_mode\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ([[channel]]) AND\n  m3_ep IN ([[m3_ep]]) AND\n  authenticated IN ([[authenticated]]) AND\n  segment IN ([[segment]])\nGROUP BY 1\nORDER BY 1 desc",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions - silent - va - hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "no_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "va"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "va_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "hybrid_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "ha_mode"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "channel",
+                  "IN",
+                  "([[channel]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "m3_ep",
+                  "IN",
+                  "([[m3_ep]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "bool",
+                "name": "",
+                "params": [
+                  "authenticated",
+                  "IN",
+                  "([[authenticated]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "segment",
+                  "IN",
+                  "([[segment]])"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "title": "${precision}(ly) KPIs - Inbound managed",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "displayMode": "auto",
+              "filterable": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "time"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Timestamp"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byRegexp",
+                "options": "/^%/"
+              },
+              "properties": [
+                {
+                  "id": "unit",
+                  "value": "locale"
+                },
+                {
+                  "id": "decimals",
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 30
+        },
+        "id": 18,
+        "interval": "",
+        "maxDataPoints": 10000,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "8.3.3",
+        "targets": [
+          {
+            "format": "table",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  sum(outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha) AS \"managed\",\n  sum(outbound_no_mode) AS \"no_mode\",\n  sum(outbound_no_mode)::numeric/nullif(sum(outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha)::numeric,0)*100.0 AS \"% no_mode\",\n  sum(outbound_va) AS \"va_mode\",\n  sum(outbound_va)::numeric/nullif(sum(outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha)::numeric,0)*100.0 AS \"% va_mode\",\n  sum(outbound_hybrid) AS \"hybrid_mode\",\n  sum(outbound_hybrid)::numeric/nullif(sum(outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha)::numeric,0)*100.0 AS \"% hybrid_mode\",\n  sum(outbound_ha) AS \"ha_mode\",\n  sum(outbound_ha)::numeric/nullif(sum(outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha)::numeric,0)*100.0 AS \"% ha_mode\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ([[channel]]) AND\n  m3_ep IN ([[m3_ep]]) AND\n  authenticated IN ([[authenticated]]) AND\n  segment IN ([[segment]])\nGROUP BY 1\nORDER BY 1 desc",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions - silent - va - hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "no_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "va"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "va_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "hybrid_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "ha_mode"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "channel",
+                  "IN",
+                  "([[channel]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "m3_ep",
+                  "IN",
+                  "([[m3_ep]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "bool",
+                "name": "",
+                "params": [
+                  "authenticated",
+                  "IN",
+                  "([[authenticated]])"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "segment",
+                  "IN",
+                  "([[segment]])"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "title": "${precision}(ly) KPIs - Outbound managed",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "displayMode": "auto",
+              "filterable": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Time"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Timestamp"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 0,
+          "y": 38
+        },
+        "id": 11,
+        "interval": "",
+        "maxDataPoints": 10000,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "8.3.3",
+        "repeatDirection": "h",
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "channel||':'||m3_ep",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  channel||':'||m3_ep AS metric,\n  sum(sessions) AS \"sessions\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ($channel) AND\n  m3_ep IN ($m3_ep) AND\n  segment IN ($segment)\nGROUP BY 1,2\nORDER BY 1, 2",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "sessions"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "channel",
+                  "IN",
+                  "($channel)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "m3_ep",
+                  "IN",
+                  "($m3_ep)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "segment",
+                  "IN",
+                  "($segment)"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "title": "${precision}(ly) sessions (Inbound + outbound) by service",
+        "transformations": [
+          {
+            "id": "seriesToColumns",
+            "options": {}
+          }
+        ],
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "displayMode": "auto",
+              "filterable": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 12,
+          "y": 38
+        },
+        "id": 16,
+        "interval": "",
+        "maxDataPoints": 10000,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "8.3.3",
+        "repeatDirection": "h",
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "channel||':'||m3_ep",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  channel||':'||m3_ep AS metric,\n  sum(sessions - inbound_silent - outbound_silent) AS \"managed\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ($channel) AND\n  m3_ep IN ($m3_ep) AND\n  authenticated IN ($authenticated) AND\n  segment IN ($segment)\nGROUP BY 1,2\nORDER BY 1,2",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions - inbound_silent - outbound_silent"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "managed"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "channel",
+                  "IN",
+                  "($channel)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "m3_ep",
+                  "IN",
+                  "($m3_ep)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "bool",
+                "name": "",
+                "params": [
+                  "authenticated",
+                  "IN",
+                  "($authenticated)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "segment",
+                  "IN",
+                  "($segment)"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "title": "${precision}(ly) managed (Inbound + outbound) sessions by service",
+        "transformations": [
+          {
+            "id": "seriesToColumns",
+            "options": {}
+          }
+        ],
+        "type": "table"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 0,
+          "y": 45
+        },
+        "hiddenSeries": false,
+        "id": 5,
+        "interval": "",
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "maxDataPoints": 10000,
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "8.3.3",
+        "pointradius": 2,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "24h",
+                  "0"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "channel",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  channel||':'||m3_ep AS metric,\n  sum(sessions) AS \"sessions\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ([[channel]]) AND\n  m3_ep IN ([[m3_ep]]) AND\n  authenticated IN ([[authenticated]]) AND\n  segment IN ([[segment]])\n\nGROUP BY 1,2\nORDER BY 1,2",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "anonymous_customers"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "${precision}(ly) sessions (Inbound + outbound) by service",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "$$hashKey": "object:1617",
+            "decimals": 0,
+            "format": "locale",
+            "label": "",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "$$hashKey": "object:1618",
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 12,
+          "y": 45
+        },
+        "hiddenSeries": false,
+        "id": 6,
+        "interval": "",
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "maxDataPoints": 10000,
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "8.3.3",
+        "pointradius": 2,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "24h",
+                  "0"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "channel",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  channel||':'||m3_ep AS metric,\n  sum(sessions - inbound_silent - outbound_silent) AS \"managed\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ([[channel]]) AND\n  m3_ep IN ([[m3_ep]]) AND\n  authenticated IN ([[authenticated]]) AND\n  segment IN ([[segment]])\n\nGROUP BY 1,2\nORDER BY 1,2",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "anonymous_customers"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "${precision}(ly) managed sessions (Inbound + outbound) by service",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "decimals": 0,
+            "format": "locale",
+            "label": "",
+            "logBase": 1,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "displayMode": "auto",
+              "filterable": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "time"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Timestamp"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 52
+        },
+        "id": 14,
+        "interval": "",
+        "maxDataPoints": 10000,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "8.3.3",
+        "targets": [
+          {
+            "format": "table",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  sum(sessions - outbound_silent - outbound_no_mode - outbound_va - outbound_hybrid - outbound_ha) AS \"sessions\",\n  sum(inbound_silent) AS \"ghost\",\n  sum(inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha) AS \"managed\",\n  sum(inbound_no_mode) AS \"no_mode\",\n  sum(inbound_va) AS \"va\",\n  sum(inbound_hybrid) AS \"hybrid\",\n  sum(inbound_ha) AS \"ha\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ($channel) AND\n  m3_ep IN ($m3_ep) AND\n  authenticated IN ($authenticated) AND\n  segment IN ($segment)\nGROUP BY 1\nORDER BY 1 desc",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions - outbound_silent - outbound_no_mode - outbound_va - outbound_hybrid - outbound_ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "sessions"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_silent"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "silent"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_no_mode + inbound_va + inbound_hybrid + inbound_ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "managed"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_no_mode"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "no_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_va"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "va"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "hybrid"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "inbound_ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "ha"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "channel",
+                  "IN",
+                  "($channel)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "m3_ep",
+                  "IN",
+                  "($m3_ep)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "bool",
+                "name": "",
+                "params": [
+                  "authenticated",
+                  "IN",
+                  "($authenticated)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "segment",
+                  "IN",
+                  "($segment)"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "title": "${precision}(ly) KPIs - Inbound",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "displayMode": "auto",
+              "filterable": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "time"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Timestamp"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 59
+        },
+        "id": 15,
+        "interval": "",
+        "maxDataPoints": 10000,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "8.3.3",
+        "targets": [
+          {
+            "format": "table",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(tstamp,$__interval),\n  sum(sessions - inbound_silent - inbound_no_mode - inbound_va - inbound_hybrid - inbound_ha) AS \"sessions\",\n  sum(outbound_silent) AS \"ghost\",\n  sum(outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha) AS \"managed\",\n  sum(outbound_no_mode) AS \"no_mode\",\n  sum(outbound_va) AS \"va\",\n  sum(outbound_hybrid) AS \"hybrid\",\n  sum(outbound_ha) AS \"ha\"\nFROM m3_dm.kpi\nWHERE\n  $__timeFilter(tstamp) AND\n  precision = '${precision}' and\n  channel IN ($channel) AND\n  m3_ep IN ($m3_ep) AND\n  authenticated IN ($authenticated) AND\n  segment IN ($segment)\nGROUP BY 1\nORDER BY 1 desc",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "sessions - inbound_silent - inbound_no_mode - inbound_va - inbound_hybrid - inbound_ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "sessions"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "outbound_silent"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "silent"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "outbound_no_mode + outbound_va + outbound_hybrid + outbound_ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "managed"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "outbound_no_mode"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "no_mode"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "outbound_va"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "va"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "outbound_hybrid"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "hybrid"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "outbound_ha"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "ha"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "m3_dm.daily_kpi",
+            "timeColumn": "day",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "channel",
+                  "IN",
+                  "($channel)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "m3_ep",
+                  "IN",
+                  "($m3_ep)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "bool",
+                "name": "",
+                "params": [
+                  "authenticated",
+                  "IN",
+                  "($authenticated)"
+                ],
+                "type": "expression"
+              },
+              {
+                "datatype": "varchar",
+                "name": "",
+                "params": [
+                  "segment",
+                  "IN",
+                  "($segment)"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "title": "${precision}(ly) KPIs - Outbound",
+        "type": "table"
+      }
+    ],
+    "refresh": "",
+    "schemaVersion": 34,
+    "style": "dark",
+    "tags": [
+      "menu"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "$$hashKey": "object:4695",
+            "selected": true,
+            "text": "day",
+            "value": "day"
+          },
+          "hide": 0,
+          "includeAll": false,
+          "label": "period",
+          "multi": false,
+          "name": "precision",
+          "options": [
+            {
+              "$$hashKey": "object:4694",
+              "selected": false,
+              "text": "halfhour",
+              "value": "halfhour"
+            },
+            {
+              "$$hashKey": "object:4695",
+              "selected": true,
+              "text": "day",
+              "value": "day"
+            },
+            {
+              "$$hashKey": "object:4696",
+              "selected": false,
+              "text": "week",
+              "value": "week"
+            },
+            {
+              "$$hashKey": "object:4697",
+              "selected": false,
+              "text": "month",
+              "value": "month"
+            },
+            {
+              "$$hashKey": "object:4698",
+              "selected": false,
+              "text": "quarter",
+              "value": "quarter"
+            }
+          ],
+          "query": "halfhour,day,week,month,quarter",
+          "queryValue": "",
+          "skipUrlSync": false,
+          "type": "custom"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres_test"
+          },
+          "definition": "select  key from m3_dm.filter where filter.name = 'channel'",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "channel",
+          "options": [],
+          "query": "select  key from m3_dm.filter where filter.name = 'channel'",
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres_test"
+          },
+          "definition": "select  key from m3_dm.filter where filter.name = 'm3_ep'",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "m3_ep",
+          "options": [],
+          "query": "select  key from m3_dm.filter where filter.name = 'm3_ep'",
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres_test"
+          },
+          "definition": "select  key from m3_dm.filter where filter.name = 'authenticated'",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "authenticated",
+          "options": [],
+          "query": "select  key from m3_dm.filter where filter.name = 'authenticated'",
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres_test"
+          },
+          "definition": "select  key from m3_dm.filter where filter.name = 'segment'",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "segment",
+          "options": [],
+          "query": "select  key from m3_dm.filter where filter.name = 'segment'",
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "",
+    "title": "m3trics_KPI",
+    "uid": "AXb1aytGk",
+    "version": 7,
+    "weekStart": ""
+  }
+}
