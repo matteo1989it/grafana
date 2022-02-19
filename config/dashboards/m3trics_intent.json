@@ -1,4 +1,5 @@
 {
+  "dashboard" :{
     "annotations": {
       "list": [
         {
@@ -21,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 2,
+    "id": null,
     "iteration": 1645210005937,
     "links": [],
     "liveNow": false,
@@ -219,3 +220,4 @@
     "version": 7,
     "weekStart": ""
   }
+}

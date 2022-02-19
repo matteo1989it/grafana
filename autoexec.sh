@@ -4,4 +4,4 @@ docker volume create grafana-storage
 
 docker run -d -v grafana-storage:/var/lib/grafana -p 3000:3000 --name=grafana grafana-weai
 
-docker exec -t grafana bash /etc/config/post.sh
+docker exec -it grafana bash /etc/config/post.sh
