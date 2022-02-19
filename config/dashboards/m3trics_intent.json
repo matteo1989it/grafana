@@ -1,5 +1,5 @@
 {
-  "dashboard" :{
+  "dashboard": {
     "annotations": {
       "list": [
         {
@@ -22,8 +22,8 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": null,
-    "iteration": 1645210005937,
+    "id": 2,
+    "iteration": 1645270959077,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -59,7 +59,8 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "green",
+                  "value": null
                 },
                 {
                   "color": "red",
@@ -104,7 +105,7 @@
             "group": [],
             "metricColumn": "user_intent",
             "rawQuery": true,
-            "rawSql": "SELECT\n  creation_timestamp AS \"Timestamp\",\n  user_intent as \"intent\",\n  COUNT(user_intent) AS \"num\"\nFROM conversation_events\nGROUP BY 1,2\nORDER BY 1,3",
+            "rawSql": "SELECT\n  creation_timestamp AS \"Timestamp\",\n  user_intent as \"intent\",\n  COUNT(user_intent) AS \"num\"\nFROM conversation_events\nGROUP BY 1,2\nORDER BY 1,3\nLIMIT $top",
             "refId": "A",
             "select": [
               [
@@ -124,6 +125,315 @@
         ],
         "title": "$period(ly) Intent",
         "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 1
+        },
+        "id": 6,
+        "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true,
+          "sortBy": [
+            {
+              "desc": true,
+              "displayName": "Timestamp"
+            }
+          ]
+        },
+        "pluginVersion": "8.4.0-beta1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "postgres",
+              "uid": "postgres_test"
+            },
+            "format": "table",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  conversation_events.creation_timestamp as \"Timestamp\",\n  channel_name AS \"channel\"\nFROM conversation_channels, conversation_events\nWHERE\n  conversation_channels.channel_id = conversation_events.channel_id\nLIMIT $top",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "conversation_channels",
+            "timeColumn": "creation_timestamp",
+            "timeColumnType": "timestamptz",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "title": "$period(ly) Intent - Detail",
+        "transformations": [],
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisLabel": "",
+              "axisPlacement": "left",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 2,
+              "pointSize": 8,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "always",
+              "spanNulls": true,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 9
+        },
+        "id": 8,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "right"
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "postgres",
+              "uid": "postgres_test"
+            },
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\r\n  $__timeGroup(creation_timestamp, '1d') AS time,\r\n  COUNT(user_intent),\r\n  user_intent as metric\r\nFROM conversation_events\r\nWHERE user_intent IS NOT NULL\r\nGROUP BY 1,3\r\nORDER BY 1 ASC, 2 DESC",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "conversation_events",
+            "timeColumn": "creation_timestamp",
+            "timeColumnType": "timestamptz",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "title": "$period(ly) Intent #",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres_test"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "axisSoftMin": 0,
+              "fillOpacity": 80,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              }
+            },
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 9
+        },
+        "id": 10,
+        "options": {
+          "barRadius": 0,
+          "barWidth": 0.43,
+          "groupWidth": 0.7,
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "right"
+          },
+          "orientation": "vertical",
+          "showValue": "never",
+          "stacking": "percent",
+          "text": {},
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          },
+          "xField": "Time",
+          "xTickLabelMaxLength": 10,
+          "xTickLabelRotation": 0,
+          "xTickLabelSpacing": 200
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "postgres",
+              "uid": "postgres_test"
+            },
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroup(creation_timestamp, '1d') AS time,\n  COUNT(user_intent),\n  user_intent as metric\nFROM conversation_events\nWHERE user_intent IS NOT NULL AND $__timeFilter(creation_timestamp)\nGROUP BY 1,3\nORDER BY 1 ASC, 2 DESC\n",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "timeColumn": "time",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "title": "Panel Title",
+        "type": "barchart"
       }
     ],
     "refresh": false,
@@ -133,23 +443,18 @@
     "templating": {
       "list": [
         {
-          "auto": true,
-          "auto_count": 200,
+          "auto": false,
+          "auto_count": 30,
           "auto_min": "10s",
           "current": {
             "selected": false,
-            "text": "day",
-            "value": "day"
+            "text": "1d",
+            "value": "1d"
           },
           "hide": 0,
           "label": "",
           "name": "period",
           "options": [
-            {
-              "selected": false,
-              "text": "auto",
-              "value": "$__auto_interval_period"
-            },
             {
               "selected": false,
               "text": "1m",
@@ -181,7 +486,7 @@
               "value": "12h"
             },
             {
-              "selected": false,
+              "selected": true,
               "text": "1d",
               "value": "1d"
             },
@@ -202,22 +507,91 @@
             }
           ],
           "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
-          "queryValue": "day",
+          "queryValue": "",
           "refresh": 2,
           "skipUrlSync": false,
           "type": "interval"
+        },
+        {
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres_test"
+          },
+          "definition": "SELECT channel_name FROM conversation_channels",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "channel",
+          "options": [],
+          "query": "SELECT channel_name FROM conversation_channels",
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": false,
+            "text": "10",
+            "value": "10"
+          },
+          "hide": 0,
+          "name": "top",
+          "options": [
+            {
+              "selected": true,
+              "text": "10",
+              "value": "10"
+            }
+          ],
+          "query": "10",
+          "skipUrlSync": false,
+          "type": "textbox"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres_test"
+          },
+          "definition": "SELECT user_intent\n  FROM conversation_events \nGROUP BY user_intent \nORDER BY COUNT (event_serial_id) DESC\nLIMIT $top",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "intent",
+          "options": [],
+          "query": "SELECT user_intent\n  FROM conversation_events \nGROUP BY user_intent \nORDER BY COUNT (event_serial_id) DESC\nLIMIT $top",
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
         }
       ]
     },
     "time": {
-      "from": "2022-01-27T23:00:00.000Z",
-      "to": "2022-01-28T22:59:59.000Z"
+      "from": "2021-12-31T23:00:00.000Z",
+      "to": "2022-01-25T22:59:58.000Z"
     },
     "timepicker": {},
     "timezone": "",
     "title": "m3trics_intent",
     "uid": "AZLXcDBnz",
-    "version": 7,
+    "version": 6,
     "weekStart": ""
   }
 }
