@@ -1,5 +1,5 @@
 {
-  "dashboard": {
+  "dashboard" : {
     "annotations": {
       "list": [
         {
@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 2,
+    "id": null,
     "iteration": 1645270959077,
     "links": [],
     "liveNow": false,
@@ -590,7 +590,7 @@
     "timepicker": {},
     "timezone": "",
     "title": "m3trics_intent",
-    "uid": "AZLXcDBnz",
+    "uid": "m3trics_intent",
     "version": 6,
     "weekStart": ""
   }

@@ -1,9 +1,9 @@
 ﻿#!/bin/sh
 echo creating datasource
-curl -u admin:admin -X POST -H "Content-Type:application/json" --data-binary "@/etc/config/datasource.json" http://localhost:3000/api/datasources
+curl -u admin:admin -X POST -H "Content-Type:application/json" --data-binary "@/etc/config/datasources/datasource.json" http://localhost:3000/api/datasources
 echo "\ndatasource created"
 echo creating dashboard
-curl -u admin:admin -X POST -H "Content-Type:application/json" --data-binary "@/etc/config/metrics_kpi.json" http://localhost:3000/api/dashboards/db
+curl -u admin:admin -X POST -H "Content-Type:application/json" --data-binary "@/etc/config/daashboards/metrics_kpi.json" http://localhost:3000/api/dashboards/db
 echo "\ndashboard created"
 echo "Press any key to continue"
 while [ true ] ; do
