@@ -26,7 +26,7 @@ docker volume create grafana-storage
 
 ## Start the container 
 ```
-docker run -d -v grafana-storage:/var/lib/grafana -p 3000:3000 --name=grafana grafana-weai
+docker run -d -v ./grafana-storage:/var/lib/grafana -p 3000:3000 --name=grafana grafana-weai
 ```
 
 ## Import datasources and dashboards
