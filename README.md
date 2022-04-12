@@ -17,19 +17,17 @@ docker build \
 ```
 
 
-## Create a persistent volume for data in /var/lib/grafana (database and plugins)
-
-```bash
-docker volume create grafana-storage
-```
-
-
 ## Start the container 
+
+The ```var``` folder contains an up-to-date copy of grafana.db that we need to copy in our container via the ```-v``` flag. This will also allow us to sync changes between container and host.
+
 ```
-docker run -d -v ./grafana-storage:/var/lib/grafana -p 3000:3000 --name=grafana grafana-weai
+docker run -d -v (path_to_var_folder):/var/lib/grafana -p 3000:3000 --name=grafana grafana-weai
 ```
 
-## Import datasources and dashboards
+## Update datasources
+
+During the building phase, the ```post.sh``` script has been copied inside our container. It launches a PUT call that will update the datasource using the content of ```config/datasources/datasource.json```. This changes can also be made using grafana's UI  
 ```
 docker exec -t grafana bash /etc/config/post.sh
 ```
@@ -38,4 +36,4 @@ docker exec -t grafana bash /etc/config/post.sh
 Open a web browser page at localhost:3000 and use the default ```user/password``` combination (admin\admin)
 
 ## EXTRA: Bash script for auto-deploy
-execute ```autoexec.sh``` to build and launch the image in one click 
+```autoexec.sh``` runs sequentially all commands showed until now. If you want to use it just remember to insert the path to the ```var``` folder.
