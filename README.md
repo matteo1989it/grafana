@@ -25,7 +25,7 @@ The ```var``` folder contains an up-to-date copy of grafana.db that we need to c
 docker run -d -v (path_to_var_folder):/var/lib/grafana -p 3000:3000 --name=grafana grafana-weai
 ```
 
-## Update datasources
+## (OPTIONAL) Update datasources
 
 During the building phase, the ```post.sh``` script has been copied inside our container. It launches a PUT call that will update the datasource using the content of ```config/datasources/datasource.json```. This changes can also be made using grafana's UI  
 ```
